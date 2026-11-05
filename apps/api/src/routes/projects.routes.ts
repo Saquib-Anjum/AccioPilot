@@ -1,0 +1,6 @@
+import { Router } from "express";
+import { currentUserId } from "../middleware/authenticate-user.js";
+import { MemoryStore } from "../store.js";
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
+const stringField = (body: Record<string, unknown>, key: string): string => { const value = body[key]; if (typeof value !== "string" || value.trim() === "") throw new Error(`INVALID_${key.toUpperCase()}`); return value.trim(); };
+export const projectsRouter = (store: MemoryStore) => { const router = Router(); router.get("/", (request, response) => response.json({ projects: store.listProjects(currentUserId(request)) })); router.post("/", (request, response) => { try { if (!isRecord(request.body)) throw new Error("INVALID_BODY"); const repositoryId = stringField(request.body, "repositoryId"); const input = typeof request.body.name === "string" ? { repositoryId, name: request.body.name } : { repositoryId }; return response.status(201).json({ project: store.createProject(currentUserId(request), input) }); } catch (_error) { return response.status(400).json({ error: { code: "INVALID_PROJECT", message: "Invalid project input" } }); } }); return router; };
