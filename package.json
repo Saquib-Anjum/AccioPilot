@@ -1,0 +1,25 @@
+{
+  "name": "acciopilot",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "npm@10",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "node --test --import tsx packages/*/src/**/*.test.ts",
+    "typecheck": "tsc -b --pretty false",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "prettier": "^3.6.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9"
+  }
+}
